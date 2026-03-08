@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -5,12 +6,13 @@ const path = require('path');
 const app = express();
 
 // Middleware
-app.use(express.urlencoded({ extended: true })); // for form submissions
-app.use(express.json()); // for JSON requests
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/mydb')
+// Connect to MongoDB (local for dev, env for prod)
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/mydb';
+mongoose.connect(mongoUri)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
